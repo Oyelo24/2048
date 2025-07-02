@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_animate: ^4.5.2
+  flutter_native_splash: ^2.4.6
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
