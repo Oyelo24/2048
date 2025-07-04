@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:work/about.dart';
 import 'package:work/screens/home_screen.dart';
+import 'package:work/settings.dart';
 import 'package:work/splash%20screen.dart';
 
 void main() {
@@ -14,6 +16,8 @@ class MyApp extends StatelessWidget {
       home: Splashscreen(),
       routes: {
         '/home': (context) => Game2048(),
+        '/about': (context) => AboutScreen(),
+        '/settings': (context) => SettingsScreen(),
       },
     );
   }

@@ -155,9 +155,7 @@ class _Game2048State extends State<Game2048> {
 
   Future<void> saveBestScore() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      bestScore = prefs.getInt('bestScore') ?? 0;
-    });
+    await prefs.setInt('bestScore', bestScore);
   }
 
   Future<void> loadBestScore() async {
@@ -171,17 +169,32 @@ class _Game2048State extends State<Game2048> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 172, 134, 134),
-      appBar: AppBar(title: Text('2048 Game'), backgroundColor: Colors.grey[850],foregroundColor: Colors.white,),
+      appBar: AppBar(title: Text('2048 Game'),
+       backgroundColor: Colors.grey[850],
+       foregroundColor: Colors.white,
+       actions: [
+        IconButton(
+          icon: Icon(Icons.info_outline, color: Colors.white),
+          onPressed: () {
+            Navigator.pushNamed(context, '/about');
+          }
+        ),
+       ],),
+       
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Score: $score', style: TextStyle(fontSize: 20, color: Colors.white)),
-              SizedBox(width: 20),
-              Text('Best: $bestScore', style: TextStyle(fontSize: 20, color: Colors.white)),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Score: $score', style: TextStyle(fontSize: 20, color: Colors.white)),
+                SizedBox(width: 20),
+                Text('Best: $bestScore', style: TextStyle(fontSize: 20, color: Colors.white)),
+              ],
+            ),
           ),
+          SizedBox(height: 40.0,),
           GestureDetector(
             onHorizontalDragEnd: handleSwipe,
             onVerticalDragUpdate: handleVertical,
@@ -225,6 +238,7 @@ class _Game2048State extends State<Game2048> {
                   ),
                   onPressed: () => setState(() {
                     grid = List.generate(gridSize, (_) => List.filled(gridSize, 0));
+                    score = 0;
                     addRandomTile();
                     addRandomTile();
                   }),
