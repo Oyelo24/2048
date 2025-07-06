@@ -141,16 +141,37 @@ class _Game2048State extends State<Game2048> {
     });
   }
 
-  void handleSwipe(DragEndDetails details) {
-    if (details.primaryVelocity == null) return;
-    if (details.primaryVelocity! < -100) moveLeft();
-    else if (details.primaryVelocity! > 100) moveRight();
+  // Track pan start and end for unified gesture handling
+  Offset? _panStart;
+
+  void _onPanStart(DragStartDetails details) {
+    _panStart = details.localPosition;
   }
 
-  void handleVertical(DragUpdateDetails details) {
-    if (details.primaryDelta == null) return;
-    if (details.primaryDelta! < -10) moveUp();
-    else if (details.primaryDelta! > 10) moveDown();
+  void _onPanEnd(DragEndDetails details) {
+    _panStart = null;
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    if (_panStart == null) return;
+    final Offset delta = details.localPosition - _panStart!;
+    if (delta.distance < 20) return; // Ignore small moves
+
+    // Determine the main direction
+    if (delta.dx.abs() > delta.dy.abs()) {
+      if (delta.dx > 0) {
+        moveRight();
+      } else {
+        moveLeft();
+      }
+    } else {
+      if (delta.dy > 0) {
+        moveDown();
+      } else {
+        moveUp();
+      }
+    }
+    _panStart = null; // Prevent multiple moves per gesture
   }
 
   Future<void> saveBestScore() async {
@@ -168,7 +189,7 @@ class _Game2048State extends State<Game2048> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 172, 134, 134),
+      backgroundColor: Colors.white,
       appBar: AppBar(title: Text('2048 Game'),
        backgroundColor: Colors.grey[850],
        foregroundColor: Colors.white,
@@ -181,24 +202,26 @@ class _Game2048State extends State<Game2048> {
         ),
        ],),
        
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Score: $score', style: TextStyle(fontSize: 20, color: Colors.white)),
-                SizedBox(width: 20),
-                Text('Best: $bestScore', style: TextStyle(fontSize: 20, color: Colors.white)),
-              ],
+      body: GestureDetector(
+        onPanStart: _onPanStart,
+        onPanUpdate: _onPanUpdate,
+        onPanEnd: _onPanEnd,
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Score: $score', style: TextStyle(fontSize: 20, color: const Color.fromARGB(255, 189, 80, 80))),
+                  SizedBox(width: 20),
+                  Text('Best: $bestScore', style: TextStyle(fontSize: 20, color: const Color.fromARGB(255, 189, 80, 80))),
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 40.0,),
-          GestureDetector(
-            onHorizontalDragEnd: handleSwipe,
-            onVerticalDragUpdate: handleVertical,
-            child: Column(
+            SizedBox(height: 40.0,),
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 for (var row in grid)
@@ -246,8 +269,8 @@ class _Game2048State extends State<Game2048> {
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -255,31 +278,31 @@ class _Game2048State extends State<Game2048> {
   Color getColor(int value) {
     switch (value) {
       case 0:
-        return Colors.grey[400]!;
+        return Color(0xFFEEE4DA); // Light beige for empty tiles
       case 2:
-        return Colors.orange[100]!;
+        return Color(0xFFE53935); // Red
       case 4:
-        return Colors.orange[200]!;
+        return Color(0xFFFFB300); // Amber
       case 8:
-        return Colors.deepOrange[300]!;
+        return Color(0xFFFFA726); // Orange
       case 16:
-        return Colors.deepOrange[400]!;
+        return Color(0xFF43A047); // Green
       case 32:
-        return Colors.red[300]!;
+        return Color(0xFF1976D2); // Blue
       case 64:
-        return Colors.red[400]!;
+        return Color(0xFF512DA8); // Deep Purple
       case 128:
-        return Colors.green[300]!;
+        return Color(0xFF00897B); // Teal
       case 256:
-        return Colors.green[400]!;
+        return Color(0xFF8D6E63); // Brown
       case 512:
-        return Colors.blue[300]!;
+        return Color(0xFFEC407A); // Pink
       case 1024:
-        return Colors.purple[300]!;
+        return Color(0xFF00ACC1); // Cyan
       case 2048:
-        return Colors.yellow[700]!;
+        return Color(0xFFFFEB3B); // Yellow
       default:
-        return Colors.black;
+        return Color(0xFFCDC1B4); // Default tile color (soft beige)
     }
   }
 }

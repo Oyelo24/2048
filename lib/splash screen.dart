@@ -24,36 +24,83 @@ class _SplashscreenState extends State<Splashscreen> {
           Positioned.fill(
             child: Padding(padding: EdgeInsets.symmetric(horizontal: 130,),
             child: CircleAvatar(
-              backgroundColor: Color(0xFF1E1E1E),
+              backgroundColor: Color(0xFFEEE4Da),
             )
             .animate()
-            .slideY(begin: -0.5, end: 0.2, duration: 4.seconds)
-            .then(delay: 300.milliseconds)
-            .slideY(end: -0.3, duration: 3.seconds)
-            .then(delay: 150.milliseconds)
-            .slideY(end: 0.1, duration: 3.seconds)
-            .then(delay: 1.milliseconds)
+            .slideY(begin: -0.5, end: 0.2, duration: 3.5.seconds)
+            .then(delay: 200.milliseconds)
+            .slideY(end: -0.3, duration: 2.5.seconds)
+            .then(delay: 100.milliseconds)
+            .slideY(end: 0.1, duration: 2.5.seconds)
+            .then(delay: 0.5.milliseconds)
             .scaleXY(end: 20, duration: 0.5.seconds)
-            .then(delay: 2.milliseconds),
+            .then(delay: 1.milliseconds),
             ),
           ),
           Align(
             alignment: Alignment.center,
-            child: Text(
-              "2048",
+            child: AnimatedGradientText(
+              text: "2048",
               style: TextStyle(
                 fontSize: 60,
                 fontWeight: FontWeight.bold,
-                color: const Color.fromARGB(255, 82, 51, 51),
+                color: Colors.white,
               ),
-            )
-            .animate()
+            ).animate()
             .fadeIn(duration: 10.seconds, curve: Curves.easeIn)
-            .then(delay: 200.milliseconds)
-            .slideX(begin: -0.5, end: 0, duration: 1.seconds)
+            .then(delay: 1.seconds)
+            .fadeOut(duration: 3.seconds, curve: Curves.easeInOut)
+           
           )
         ],
       ),
+    );
+  }
+}
+
+class AnimatedGradientText extends StatefulWidget {
+  final String text;
+  final TextStyle style;
+  const AnimatedGradientText({required this.text, required this.style, super.key});
+
+  @override
+  State<AnimatedGradientText> createState() => _AnimatedGradientTextState();
+}
+
+class _AnimatedGradientTextState extends State<AnimatedGradientText> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return ShaderMask(
+          shaderCallback: (Rect bounds) {
+            return LinearGradient(
+              colors: [Colors.red, Colors.amber, Colors.green, Colors.blue],
+              begin: Alignment(-1 + 2 * _controller.value, -1),
+              end: Alignment(1 - 2 * _controller.value, 1),
+            ).createShader(bounds);
+          },
+          child: Text(widget.text, style: widget.style),
+        );
+      },
     );
   }
 }

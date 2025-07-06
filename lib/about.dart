@@ -1,8 +1,14 @@
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
+
+  final String githubUrl = 'https://github.com/Oyelo24';
+  final String linkedinUrl = 'https://www.linkedin.com/in/oyelowo-olayiwola-a6b6202aa/';
+  final String email = 'olayiwolasolomon96@gmail.com';
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +23,18 @@ class AboutScreen extends StatelessWidget {
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               )),
-          bottom: TabBar(
+          bottom: const TabBar(
             tabs: [
-              Row(
-                children: [
-                  Image.asset('assets/images/pad.png', width: 24, height: 24,
-                  color: Colors.white,),
-                  const SizedBox(width: 4),
-                  const Tab(text: 'About Game'),
-                ],
+              Tab(
+                icon: Icon(Icons.videogame_asset),
+                text: 'About Game',
               ),
-              const Tab(text: 'About Developer'),
+              Tab(
+                icon: Icon(Icons.person),
+                text: 'About Developer',
+              ),
             ],
-            indicatorColor: const Color.fromARGB(255, 172, 134, 134),
+            indicatorColor: Color.fromARGB(255, 172, 134, 134),
             labelColor: Colors.white,
           ),
         ),
@@ -252,10 +257,40 @@ class AboutScreen extends StatelessWidget {
                       color: Colors.teal.withOpacity(0.1),
                     ),
                     padding: const EdgeInsets.all(8),
-                    child: const Text(
-                      'Connect with me',
-                      style: TextStyle(fontSize: 12, color: Colors.teal, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Connect with me',
+                          style: TextStyle(fontSize: 16, color: Colors.teal, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Column(
+                          children: [
+                            _buildContactCard(
+                              icon: FontAwesomeIcons.github,
+                              title: "GitHub Profile",
+                              subtitle: "@Oyelo24",
+                              url: "https://github.com/Oyelo24",
+                            ),
+                            const SizedBox(height: 12),
+                            _buildContactCard(
+                              icon: FontAwesomeIcons.linkedin,
+                              title: "LinkedIn",
+                              subtitle: "LinkedIn Profile",
+                              url: "https://www.linkedin.com/in/oyelowo-olayiwola-a6b6202aa/",
+                            ),
+                            const SizedBox(height: 12),
+                            _buildContactCard(
+                              icon: FontAwesomeIcons.envelope,
+                              title: "Email",
+                              subtitle: "olayiwolasolomon96@gmail.com",
+                              url: "mailto:olayiwolasolomon96@gmail.com",
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -267,6 +302,60 @@ class AboutScreen extends StatelessWidget {
     );
   }
 }
+
+Widget _buildContactCard({
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required String url,
+  bool fullWidth = false,
+}) {
+  return GestureDetector(
+    onTap: () async {
+      final uri = Uri.parse(url);
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        throw 'Could not launch $url';
+      }
+    },
+    child: Container(
+      width: fullWidth ? double.infinity : null,
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          FaIcon(icon, color: Colors.teal, size: 26),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(subtitle,
+                    style: const TextStyle(
+                        fontSize: 12, color: Colors.black54)),
+              ],
+            ),
+          )
+        ],
+      ),
+    ),
+  );
+}
+
 
 class _InfoCard extends StatelessWidget {
   final Color color;
@@ -310,5 +399,26 @@ class _InfoCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+void launchUrlGithub(String url) async{
+  final Uri uri = Uri.parse(url);
+  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    throw 'Could not launch $url';
+  }
+}
+
+void launchEmail(String email) async {
+  final Uri uri = Uri(scheme: 'mailto', path: email);
+  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    throw 'Could not launch $email';
+  }
+}
+
+void launchLinkedIn(String url) async {
+  final Uri uri = Uri.parse(url);
+  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    throw 'Could not launch $url';
   }
 }
