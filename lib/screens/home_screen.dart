@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:work/settings.dart';
+import 'package:work/screens/index_screen.dart';
+//import 'package:work/settings.dart';
 // Update with the correct path
 
 class Game2048 extends StatefulWidget {
@@ -769,7 +770,7 @@ class _Game2048State extends State<Game2048> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SettingsScreen(),
+                                  builder: (context) => IndexHomeScreen(),
                                 ),
                               );
                             },
