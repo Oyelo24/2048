@@ -203,21 +203,71 @@ class IndexHomeScreen extends StatelessWidget {
                     SizedBox(height: 12),
                     Row(
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.purple.shade200,
-                          child: Icon(
-                            FontAwesomeIcons.trophy,
-                            size: 18,
-                            color: Colors.white,
-                          ),
+                        Stack(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.purple.shade200,
+                              child: Icon(
+                                FontAwesomeIcons.trophy,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: CircleAvatar(
+                                radius: 10,
+                                backgroundColor: Colors.amber,
+                                child: Text(
+                                  '5',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(width: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Grid Commander',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text('stage 5'),
+                          ],
+                        ),
+                        SizedBox(width: 110),
+                        IconButton(
+                          icon: Icon(Icons.arrow_forward, size: 16),
+                          color: Colors.black,
+                          onPressed: () {
+                            // Show more info about the achievement
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Text(
-                          'Grid Commander',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          'Progress to next stage',
+                          style: TextStyle(color: Colors.black, fontSize: 11),
+                        ),
+
+                        Text(
+                          '2,350 / 3,000 XP',
+                          style: TextStyle(color: Colors.black, fontSize: 13),
                         ),
                       ],
                     ),
@@ -228,10 +278,12 @@ class IndexHomeScreen extends StatelessWidget {
                       backgroundColor: Colors.grey.shade300,
                     ),
                     SizedBox(height: 8),
-                    Text('2,350 / 3,000 XP'),
-                    Text(
-                      '650 XP needed for next stage',
-                      style: TextStyle(color: Colors.grey),
+
+                    Center(
+                      child: Text(
+                        '650 XP needed for next stage',
+                        style: TextStyle(color: Colors.grey),
+                      ),
                     ),
                   ],
                 ),
@@ -240,13 +292,56 @@ class IndexHomeScreen extends StatelessWidget {
               SizedBox(height: 20),
 
               // Quick Play
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.play_arrow),
-                label: Text('Start New Game'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(vertical: 14),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: Colors.green),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.play_arrow_outlined, color: Colors.black),
+                          SizedBox(width: 8),
+                          Text(
+                            'Quick Play',
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.grid_view, color: Colors.white),
+                            SizedBox(width: 8),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Start New Game',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
